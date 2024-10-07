@@ -37,7 +37,8 @@ async function run() {
         const researchCollection = client.db('collegeUniverse').collection('research')
         const reviewCollection = client.db('collegeUniverse').collection('reviews')
 
-        const allColleges = client.db('collegeUniverse').collection('allCollege')
+        const allCollegesCollection = client.db('collegeUniverse').collection('allCollege')
+        const formCollection = client.db('collegeUniverse').collection('form')
 
 
 
@@ -69,7 +70,42 @@ async function run() {
 
         // all colleges related routes
         app.get('/allColleges', async (req, res) => {
-            const result = await allColleges.find().toArray()
+            const result = await allCollegesCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.get('/allColleges/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await allCollegesCollection.findOne(query)
+            res.send(result)
+        })
+
+        // form related api data
+
+        app.post('/form', async (req, res) => {
+            const form = req.body;
+            console.log(form);
+            const result = await formCollection.insertOne(form)
+            res.send(result)
+        })
+
+        // app.get('/form', async (req, res) => {
+        //     const email = req.query.email;
+        //     let query = {};
+        //     if (email) {
+        //         query = { email: email }
+        //     }
+        //     const result = await formCollection.find(query).toArray()
+        //     res.send(result)
+        // })
+        app.get('/form', async (req, res) => {
+            const email = req.params.email;
+            let query = {};
+            if (email) {
+                query = { email: email }
+            }
+            const result = await formCollection.find(query).toArray()
             res.send(result)
         })
 
