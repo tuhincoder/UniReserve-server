@@ -11,14 +11,13 @@ const port = process.env.PORT || 5000;
 app.use(cors())
 app.use(express.json())
 
-// collegeUniverse
-// college
+
 
 
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tpqoiya.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-console.log(uri);
+
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -35,10 +34,10 @@ async function run() {
         await client.connect();
 
         const colUniverse = client.db('collegeUniverse').collection('college')
-        // research
         const researchCollection = client.db('collegeUniverse').collection('research')
-        // reviews
         const reviewCollection = client.db('collegeUniverse').collection('reviews')
+
+        const allColleges = client.db('collegeUniverse').collection('allCollege')
 
 
 
@@ -66,6 +65,12 @@ async function run() {
             const result = await colUniverse.findOne(query)
             res.send(result)
 
+        })
+
+        // all colleges related routes
+        app.get('/allColleges', async (req, res) => {
+            const result = await allColleges.find().toArray()
+            res.send(result)
         })
 
 
